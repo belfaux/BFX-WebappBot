@@ -75,7 +75,8 @@ class BasicBot {
                 await context.sendActivity(`I understand greetings, being asked for help, or being asked to cancel what I am doing.`);
             break;
             case CANCEL_INTENT:
-                await context.sendActivity(`I have nothing to cancel.`);
+                    await context.sendActivity(`I have nothing to cancel.`);
+
             break;
             case NONE_INTENT:
             default:
@@ -110,6 +111,31 @@ class BasicBot {
             }
         }
     }
+
+    bot.dialog('basicQnAMakerPreviewDialog', basicQnAMakerPreviewDialog);
+    bot.dialog('showCards', function(session) {
+        var msg = new builder.Message(session);
+        msg.attachmentLayout(builder.AttachmentLayout.carousel)
+        msg.attachments([
+            new builder.HeroCard(session)
+                .title("VISA")
+                // .subtitle("Get a VISA card")
+                .text("Check out our selection of VISA Cards")
+                .images([builder.CardImage.create(session, 'https://i.imgur.com/YtPmNVT.png')])
+                .buttons([
+                    builder.CardAction.imBack(session, "Show Visa", "VISA")
+                ]),
+            new builder.HeroCard(session)
+                .title("MasterCard")
+                //.subtitle("Get a MasterCard")
+                .text("Check out our selection of MasterCards")
+                .images([builder.CardImage.create(session, 'https://i.imgur.com/SgihI8g.png')])
+                .buttons([
+                    builder.CardAction.imBack(session, "Show MasterCard", "MasterCard")
+                ])
+        ]);
+        session.send(msg).endDialog();
+    }).triggerAction({ matches: /^card$/i })
 }
 
 module.exports.BasicBot = BasicBot;
